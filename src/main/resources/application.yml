@@ -14,24 +14,43 @@ spring:
             - Path=/book-api/**
           filters:
             - StripPrefix=1
+            - AuthorizationHeaderFilter
         - id: user-api
           uri: lb://user-api
           predicates:
             - Path=/user-api/**
           filters:
             - StripPrefix=1
+            - AuthorizationHeaderFilter
         - id: order-api
           uri: lb://order-api
           predicates:
             - Path=/order-api/**
           filters:
             - StripPrefix=1
+            - AuthorizationHeaderFilter
         - id: coupon-api
           uri: lb://coupon-api
           predicates:
             - Path=/coupon-api/**
           filters:
             - StripPrefix=1
+            - AuthorizationHeaderFilter
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth-service/**
+          filters:
+            - StripPrefix=1
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+      name: jwt
+
+  config:
+    import: "optional:configserver:"
+
 
 eureka:
   client:
