@@ -14,22 +14,32 @@ spring:
             - Path=/book-api/**
           filters:
             - StripPrefix=1
+            - AuthorizationHeaderFilter
         - id: user-api
           uri: lb://user-api
           predicates:
             - Path=/user-api/**
           filters:
             - StripPrefix=1
+            - AuthorizationHeaderFilter
         - id: order-api
           uri: lb://order-api
           predicates:
             - Path=/order-api/**
           filters:
             - StripPrefix=1
+            - AuthorizationHeaderFilter
         - id: coupon-api
           uri: lb://coupon-api
           predicates:
             - Path=/coupon-api/**
+          filters:
+            - StripPrefix=1
+            - AuthorizationHeaderFilter
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth-service/**
           filters:
             - StripPrefix=1
 
@@ -39,3 +49,9 @@ eureka:
       defaultZone: http://localhost:10344/eureka,http://localhost:10345/eureka
     register-with-eureka: true
     fetch-registry: true
+
+custom:
+  security:
+    jwt:
+      access-token-expiration: 3600
+      refresh-token-expiration: 604800
