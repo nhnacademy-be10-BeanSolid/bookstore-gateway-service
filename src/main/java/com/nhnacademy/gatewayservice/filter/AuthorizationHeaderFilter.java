@@ -88,9 +88,13 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                     addTokenCookies(exchange.getResponse(), tokenResponse);
                     return parseTokenAndForward(tokenResponse.accessToken(), request, exchange, chain)
                             .onErrorResume(e -> {
-                                log.warn("refreshToken 재발급 실패: {}", e.getMessage());
+                                log.warn("재발급된 accessToken 파싱 실패: {}", e.getMessage());
                                 return chain.filter(exchange);
                             });
+                })
+                .onErrorResume(e -> {
+                    log.warn("refreshToken 재발급 실패: {}", e.getMessage());
+                    return chain.filter(exchange);
                 });
     }
 
