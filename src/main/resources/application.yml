@@ -49,9 +49,3 @@ eureka:
       defaultZone: http://localhost:10344/eureka,http://localhost:10345/eureka
     register-with-eureka: true
     fetch-registry: true
-
-custom:
-  security:
-    jwt:
-      access-token-expiration: 3600
-      refresh-token-expiration: 604800
