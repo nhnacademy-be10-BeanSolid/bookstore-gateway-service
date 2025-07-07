@@ -42,6 +42,7 @@ spring:
             - Path=/auth-service/**
           filters:
             - StripPrefix=1
+            - AuthorizationHeaderFilter
 
 eureka:
   client:
