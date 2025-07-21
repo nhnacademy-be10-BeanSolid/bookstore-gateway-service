@@ -27,12 +27,26 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
+      - name: Build with Maven (for SonarQube analysis)
+        run: mvn -B clean verify --file pom.xml
 
-      - name: Run sonarQube
-        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-        run: mvn clean verify sonar:sonar -Dsonar.projectKey=bookstore-BeanSolid-gateway-service -Dsonar.projectName='bookstore-BeanSolid-gateway-service' -Dsonar.host.url=${{ secrets.SONAR_HOST }} -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+      - name: SonarQube Scan and Quality Gate Check
+        uses: SonarSource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST }}
+        with:
+          projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=bookstore-BeanSolid-gateway-service
+            -Dsonar.projectName='bookstore-BeanSolid-gateway-service'
+            -Dsonar.sources=src/main/java
+            -Dsonar.tests=src/test/java
+            -Dsonar.java.binaries=target/classes
+            -Dsonar.java.test.binaries=target/test-classes
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+            -Dsonar.qualitygate.wait=true
+            -Dsonar.qualitygate.timeout=300
 
       - name: upload file
         uses: appleboy/scp-action@master
