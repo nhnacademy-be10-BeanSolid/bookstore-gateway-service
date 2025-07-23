@@ -50,3 +50,11 @@ eureka:
       defaultZone: http://localhost:10344/eureka,http://localhost:10345/eureka
     register-with-eureka: true
     fetch-registry: true
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: Auth-Service
+        url: /auth-service/v3/api-docs
